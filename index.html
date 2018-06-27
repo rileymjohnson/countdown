@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Zoundslike - Home</title>
+<link href="https://fonts.googleapis.com/css?family=Pragati+Narrow" rel="stylesheet">
+<style>
+body{
+	text-align: center;
+	background-color: black;
+	font-family: sans-serif;
+	font-weight: 100;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+#vertical {
+	width: 100%;
+    position: absolute;
+    top: 40%;
+    transform: translate(0,-50%);
+}
+
+
+#clockdiv{
+	font-family: sans-serif;
+	color: #fff;
+	display: inline-block;
+	font-weight: 100;
+	text-align: center;
+	font-size: 30px;
+    width: 100%;
+    margin-top: -7vw;
+}
+
+#clockdiv > div{
+	padding: 10px;
+	border-radius: 3px;
+	background: #189ad3;
+	display: inline-block;
+	margin-top: 10px;
+}
+
+#clockdiv div > span{
+	padding: 15px;
+	border-radius: 3px;
+	background: #005073;
+	display: inline-block;
+	font-size: 40px;
+}
+
+.crossed-out {
+	text-decoration: line-through;
+}
+
+#logo {
+	width: 100%;
+	margin: 0 auto;
+	margin-top: -40px;
+}
+
+.smalltext{
+	padding-top: 5px;
+	font-size: 20px;
+}
+
+#titleHolder {
+	margin-top: 20px;
+}
+
+#titleHolder span {
+	color: white;
+	font-size: 60px;
+	font-family: 'Pragati Narrow', sans-serif;
+	margin-top: 20px !important;
+}
+
+#logo {
+	height: 65vh !important;
+    width: auto !important;
+}
+
+@keyframes strike{
+  0%   { width : 0; }
+  100% { width: 100%; }
+}
+.strike {
+  position: relative;
+}
+.strike:after {
+  content: ' ';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: white;
+  animation-name: strike;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards; 
+}
+
+@media screen and (max-width: 1000px) {
+    #titleHolder span {
+    	font-size: 40px;
+    }
+    #clockdiv div > span {
+    	font-size: 30px;
+    }
+    .smalltext {
+    	font-size: 15px;
+    }
+    #titleHolder {
+    	margin-bottom: 30px;
+    }
+    #logo {
+    	width: 100% !important;
+    	height: auto !important;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    #clockdiv {
+    	margin-top: -40px;
+    }
+}
+</style>
+</head>
+
+<body>
+	<div id="titleHolder">
+		<span id="wrong2"></span><span id="title"></span>
+	</div>
+	<img src="/logo.png" alt="zoundslike logo" id="logo" />
+	<div id="clockdiv">
+	  <div>
+	    <span class="days"></span>
+	    <div class="smalltext">Days</div>
+	  </div>
+	  <div>
+	    <span class="hours"></span>
+	    <div class="smalltext">Hours</div>
+	  </div>
+	  <div>
+	    <span class="minutes"></span>
+	    <div class="smalltext">Minutes</div>
+	  </div>
+	  <div>
+	    <span class="seconds"></span>
+	    <div class="smalltext">Seconds</div>
+	  </div>
+	</div>
+</body>
+
+<script src="/jquery.min.js"></script>
+<script src="/typed.min.js"></script>
+<script>
+	var once = true;
+	var typed = new Typed("#title", {
+	  strings: ["<span id='wrong'>Lunching</span> Soon:"],
+	  smartBackspace: true,
+	  typeSpeed: 80,
+	  backSpeed: 70,
+	  showCursor: true,
+	  onComplete: function() {
+	  	$("#wrong").addClass("strike")
+	  	$(".typed-cursor").hide()
+
+	  	setTimeout(function() {
+
+	  		var typed2 = new Typed("#wrong", {
+			  strings: [""],
+			  smartBackspace: true,
+			  typeSpeed: 80,
+			  backSpeed: 70,
+			  showCursor: true,
+			  onLastStringBackspaced: function() {
+			  	if (once) {
+			  		$("#wrong").hide()
+				  	$(".typed-cursor").hide()
+				  	$("#titleHolder").prepend("<span id='final'></span>")
+
+					var typed3 = new Typed("#final", {
+					  strings: ["^200Launching&nbsp;"],
+					  smartBackspace: true,
+					  typeSpeed: 80,
+					  backSpeed: 70,
+					  showCursor: true,
+					  onComplete: function() {
+					  	console.log("done")
+					  	$(".typed-cursor").hide()
+					  }
+					});				  	
+
+				  	once = false;
+				}
+			  }
+			});
+
+	  	}, 1500)
+
+	  }
+	});
+
+	function getTimeRemaining(endtime) {
+	  var t = Date.parse(endtime) - Date.parse(new Date());
+	  var seconds = Math.floor((t / 1000) % 60);
+	  var minutes = Math.floor((t / 1000 / 60) % 60);
+	  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+	  var days = Math.floor(t / (1000 * 60 * 60 * 24));
+	  return {
+	    'total': t,
+	    'days': days,
+	    'hours': hours,
+	    'minutes': minutes,
+	    'seconds': seconds
+	  };
+	}
+
+	function initializeClock(id, endtime) {
+	  var clock = document.getElementById(id);
+	  var daysSpan = clock.querySelector('.days');
+	  var hoursSpan = clock.querySelector('.hours');
+	  var minutesSpan = clock.querySelector('.minutes');
+	  var secondsSpan = clock.querySelector('.seconds');
+
+	  function updateClock() {
+	    var t = getTimeRemaining(endtime);
+
+	    daysSpan.innerHTML = t.days;
+	    hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+	    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+	    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+	    if (t.total <= 0) {
+	      clearInterval(timeinterval);
+	    }
+	  }
+
+	  updateClock();
+	  var timeinterval = setInterval(updateClock, 1000);
+	}
+
+	var deadline = new Date(2018, 5, 30, 0, 0, 0, 0)
+	initializeClock('clockdiv', deadline);
+</script>
+
+</html>
